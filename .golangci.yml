@@ -56,11 +56,13 @@ linters:
     - unconvert
     - varcheck
     - whitespace
+    - golint
+    - unused
+    - unparam
 
     # TODO: enable these linters
     # - dupl
     # - scopelint
-    # - golint
     # - funlen
     # - lll
     # - gosec
@@ -68,8 +70,6 @@ linters:
     # - govet
     # - gochecknoinits
     # - interfacer
-    # - unparam
-    # - unused
     # - goconst
     # - gocyclo
     # - stylecheck
