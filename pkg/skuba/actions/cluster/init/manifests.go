@@ -18,6 +18,9 @@
 package cluster
 
 const (
+	CriConfFolderReadme = `This folder contains the files that are uploaded to your nodes for customizing CRIO
+	All the files (except this README) will be uploaded to the /etc/crio/conf.d/ folder.
+	`
 	criDockerDefaultsConf = `## Path           : System/Management
 ## Description    : Extra cli switches for crio daemon
 ## Type           : string
@@ -25,7 +28,8 @@ const (
 ## ServiceRestart : crio
 #
 CRIO_OPTIONS=--pause-image={{.PauseImage}}{{if not .StrictCapDefaults}} --default-capabilities="CHOWN,DAC_OVERRIDE,FSETID,FOWNER,NET_RAW,SETGID,SETUID,SETPCAP,NET_BIND_SERVICE,SYS_CHROOT,KILL,MKNOD,AUDIT_WRITE,SETFCAP"{{end}}`
-	criDefaultsConf = `{{if not .StrictCapDefaults}}[crio.runtime]
+	criDefaultsConf = `# This should not be edited, and are the defaults provided by CaaSP
+{{if not .StrictCapDefaults}}[crio.runtime]
 
 default_capabilities = [
 	"CHOWN",

@@ -119,10 +119,10 @@ func coreBootstrap(initConfiguration *kubeadmapi.InitConfiguration, bootstrapCon
 	}
 
 	var criSetup string
-	if _, err := os.Stat(skuba.CriDefaultsConfFile()); err == nil {
-		criSetup = "cri.configure"
-	} else if _, err := os.Stat(skuba.CriDockerDefaultsConfFile()); err == nil {
+	if _, err := os.Stat(skuba.CriDockerDefaultsConfFile()); err == nil {
 		criSetup = "cri.sysconfig"
+	} else if _, err := os.Stat(skuba.CriDefaultsConfFile()); err == nil {
+		criSetup = "cri.configure"
 	}
 
 	// bsc#1155810: generate cluster-wide kubelet root certificate

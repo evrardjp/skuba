@@ -35,6 +35,11 @@ import (
 	upgradenode "github.com/SUSE/skuba/internal/pkg/skuba/upgrade/node"
 )
 
+type DefaultCrioTemplate struct {
+	StrictCapDefaults bool
+	PauseImage        uint
+}
+
 func Apply(client clientset.Interface, target *deployments.Target) error {
 	if err := fillTargetWithNodeNameAndRole(client, target); err != nil {
 		return err
@@ -128,6 +133,23 @@ func Apply(client clientset.Interface, target *deployments.Target) error {
 			return err
 		}
 	}
+
+	if nodeVersionInfoUpdate.Current.ContainerRuntimeVersion.Minor() == 16 {
+		initCfg, err := kubeadm.GetClusterConfiguration(client)
+		if err != nil {
+			return err
+		}
+
+		var crio_template DefaultCrioTemplate
+		crio_template.PauseImage = initCfg.ImageRepository
+		crio_template.StrictCapDefaults = false
+
+		err = target.Apply(crio_template, "crio16to18upgrade")
+		if err != nil {
+			return err
+		}
+	}
+
 	if nodeVersionInfoUpdate.HasMajorOrMinorUpdate() {
 		err = target.Apply(deployments.KubernetesBaseOSConfiguration{
 			UpdatedVersion: nodeVersionInfoUpdate.Update.KubeletVersion.String(),
